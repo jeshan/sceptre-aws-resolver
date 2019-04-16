@@ -1,0 +1,4 @@
+template_path: deployment-pipeline.yaml
+
+parameters:
+  EmailAddress: {{var.email_address}}

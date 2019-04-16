@@ -1,0 +1,139 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Deployment pipeline for sceptre-aws-resolver'
+
+Parameters:
+  EmailAddress:
+    Type: String
+  GithubRepo:
+    Type: String
+    Default: https://github.com/jeshan/sceptre-aws-resolver
+
+Resources:
+  NotificationRule:
+    Properties:
+      EventPattern: '{"source":["aws.codebuild"],"detail-type":["CodeBuild Build State Change"],"detail":{"build-status":["FAILED","STOPPED","SUCCEEDED"],"project-name":["sceptre-aws-resolver-release"]}}'
+      State: ENABLED
+      Targets:
+        - Arn: !Ref 'Topic'
+          Id: some-id
+    Type: AWS::Events::Rule
+
+  Topic:
+    Type: AWS::SNS::Topic
+
+  TopicPolicy:
+    Properties:
+      PolicyDocument:
+        Id: __default_policy_ID
+        Statement:
+          - Action:
+              - SNS:GetTopicAttributes
+              - SNS:SetTopicAttributes
+              - SNS:AddPermission
+              - SNS:RemovePermission
+              - SNS:DeleteTopic
+              - SNS:Subscribe
+              - SNS:ListSubscriptionsByTopic
+              - SNS:Publish
+              - SNS:Receive
+            Condition:
+              StringEquals:
+                AWS:SourceOwner: !Ref AWS::AccountId
+            Effect: Allow
+            Principal:
+              AWS: '*'
+            Resource: !Ref 'Topic'
+            Sid: __default_statement_ID
+          - Action: sns:Publish
+            Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Resource: !Ref 'Topic'
+            Sid: AWSEvents_sceptre-aws-resolver-release-notification_Id14799589213970
+        Version: '2012-10-17'
+      Topics:
+        - !Ref 'Topic'
+    Type: AWS::SNS::TopicPolicy
+
+  EmailSubscription:
+    Properties:
+      Endpoint: !Ref EmailAddress
+      Protocol: email
+      Region: !Ref 'AWS::Region'
+      TopicArn: !Ref 'Topic'
+    Type: AWS::SNS::Subscription
+
+  Project:
+    Properties:
+      Artifacts:
+        Type: NO_ARTIFACTS
+      BadgeEnabled: true
+      Cache:
+        Type: NO_CACHE
+      Description: releases sceptre-aws-resolver
+      EncryptionKey: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:alias/aws/s3'
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/python:3.6.5
+        PrivilegedMode: true
+        Type: LINUX_CONTAINER
+      Name: sceptre-aws-resolver-release
+      ServiceRole: !GetAtt 'CodeBuildServiceRole.Arn'
+      Source:
+        GitCloneDepth: 1
+        InsecureSsl: false
+        Location: !Ref GithubRepo
+        ReportBuildStatus: false
+        Type: GITHUB
+      TimeoutInMinutes: 15
+      Triggers:
+        Webhook: true
+        FilterGroups:
+          - - Type: EVENT
+              Pattern: PUSH
+    Type: AWS::CodeBuild::Project
+
+  CodeBuildServiceRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns: # if getting policy not attachable, deploy this in a second step
+        - !Ref 'LogManagedPolicy'
+        - !Ref 'SsmManagedPolicy'
+      Path: /service-role/
+    Type: AWS::IAM::Role
+
+  LogManagedPolicy:
+    Properties:
+      Description: Policy used in trust relationship with CodeBuild
+      Path: /service-role/
+      PolicyDocument:
+        Statement:
+          - Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+            Resource:
+              - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/sceptre-aws-resolver-release'
+              - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/sceptre-aws-resolver-release:*'
+        Version: '2012-10-17'
+    Type: AWS::IAM::ManagedPolicy
+
+  SsmManagedPolicy:
+    Properties:
+      Description: Policy used in trust relationship with CodeBuild
+      Path: /service-role/
+      PolicyDocument:
+        Statement:
+          - Action:
+              - ssm:GetParameters
+            Effect: Allow
+            Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CodeBuild/*'
+        Version: '2012-10-17'
+    Type: AWS::IAM::ManagedPolicy

@@ -13,5 +13,5 @@ phases:
     commands:
       - pip install --upgrade setuptools wheel twine
       - mkdir -p sceptre-aws-resolver/sceptre-aws-resolver
-      - cp setup.py README.md release.sh sceptre-aws-resolver/
+      - cp main.py setup.py README.md release.sh sceptre-aws-resolver/
       - cd sceptre-aws-resolver && ./release.sh

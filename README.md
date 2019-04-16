@@ -4,6 +4,7 @@
 ![Build badge](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiNlZwTFptVGM4ZTB3NTY0SkZNb2xyMWVac2JLR3IwOVpJTWtLblVCR2NXNGJZbHREdUh4M0NGTWlKV3M3cHk1Q2pXbEJ6eFVYM3ZVN0JxUVZPRUtUN1AwPSIsIml2UGFyYW1ldGVyU3BlYyI6IjluZVpUK1c0MmVCbEFHZXgiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
 
 [Sceptre](https://github.com/cloudreach/sceptre) resolver for any AWS API.
+Get started by running `pip install sceptre-aws-resolver`
 
 Format: `!aws client_name::operation_name::optional_parameter_in_dict_format::optional_jmespath_expression_to_filter_output`.
 

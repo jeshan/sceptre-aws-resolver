@@ -8,7 +8,7 @@ install_requirements = ["sceptre>=2.0"]
 
 setup(
     name="sceptre-aws-resolver",
-    version="0.1",
+    version="0.2",
     description="Sceptre AWS resolver",
     py_modules=["main"],
     long_description=readme,

@@ -7,8 +7,6 @@
 
 Format: `!aws client_name::operation_name::optional_parameter_in_dict_format::optional_jmespath_expression_to_filter_output`.
 
-Relies on boto3, the AWS SDK for python to make the api calls.
-
 Examples:
 - Return call to STS [GetCallerIdentity](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetCallerIdentity.html) in string format: `!aws sts::get_caller_identity`
 - Get current UserId: `!aws sts::get_caller_identity::::UserId`

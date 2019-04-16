@@ -8,7 +8,7 @@ Get started by running `pip install sceptre-aws-resolver`
 
 Format: 
 
-`!aws client_name::operation_name::optional_parameter_in_dict_format::optional_jmespath_expression_to_filter_output`.
+`!aws client::operation::optional_parameters::optional_jmespath_filter`.
 
 Examples:
 - Return call to STS [GetCallerIdentity](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetCallerIdentity.html) in string format: `!aws sts::get_caller_identity`

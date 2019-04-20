@@ -13,7 +13,7 @@ Format:
 Examples:
 - Return call to STS [GetCallerIdentity](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetCallerIdentity.html) in string format: `!aws sts::get_caller_identity`
 - Get current UserId: `!aws sts::get_caller_identity::::UserId`
-- Read a systems manager parameter and return its value: `!aws ssm::get_parameter::'Name':'your-param-name'::Parameter.Value`
+- Read a systems manager parameter in us-east-1 and return its value: `!aws ssm::get_parameter::'Name':'your-param-name'::Parameter.Value::us-east-1`
 - Read a systems manager parameter and return its **decrypted** value if necessary: `!aws ssm::get_parameter::'Name':'your-secret-param','WithDecryption':True::Parameter.Value`
 
 See the jmespath package for query examples:

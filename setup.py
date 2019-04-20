@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import os
+
 from setuptools import setup
 
 with open("README.md") as readme_file:
@@ -8,7 +10,7 @@ install_requirements = ["sceptre>=2.0"]
 
 setup(
     name="sceptre-aws-resolver",
-    version="0.2",
+    version=os.environ['CODE_VERSION'],
     description="Sceptre AWS resolver",
     py_modules=["main"],
     long_description=readme,

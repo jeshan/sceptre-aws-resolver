@@ -23,3 +23,8 @@ https://pypi.org/project/jmespath/
 Released under the simplified BSD licence. See [LICENCE.txt](LICENCE.txt) for details.
 
 Thanks to the https://github.com/zaro0508/sceptre-date-resolver project for providing the boilerplate.
+
+## Deployment
+This project's pipeline is defined as CloudFormation template in [templates/deployment-pipeline.yaml](templates/deployment-pipeline.yaml). This is what a visualisation of it looks like:
+
+![](/diagram.png)

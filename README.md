@@ -28,3 +28,5 @@ Thanks to the https://github.com/zaro0508/sceptre-date-resolver project for prov
 This project's pipeline is defined as CloudFormation template in [templates/deployment-pipeline.yaml](templates/deployment-pipeline.yaml). This is what a visualisation of it looks like:
 
 ![](/diagram.png)
+
+*Image automatically generated with [cfnbuddy](https://www.cfnbuddy.com)*
